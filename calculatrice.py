@@ -1,77 +1,98 @@
-# Function to add two numbers
+#Calculation functions
 def add(a, b):
     return a + b
 
-# Function to subtract the second number from the first
 def subtract(a, b):
     return a - b
 
-# Function to multiply two numbers
 def multiply(a, b):
     return a * b
 
-# Function to divide the first number by the second
 def divide(a, b):
     if b == 0:
-        return "Error! Division by zero is not allowed."
+        return "Error. Division by 0 is not allowed."
     return a / b
 
-# Function to calculate the percentage of the first number based on the second
 def percentage(a, b):
     return a * b / 100
 
-# Function to raise the first number to the power of the second
 def power(a, b):
     return a ** b
 
-# Function to get the user's operation choice
-def get_user_choice():
-    return input("Choose an operation (+  -  *  /  %  ^ ) or 'Q' to quit: ").strip()
 
-# Function to get two numbers from the user
-def get_numbers():
-    try:
-        num1 = float(input("Enter the first number: "))
-        num2 = float(input("Enter the second number: "))
-        return num1, num2
-    except ValueError:
-        print("Invalid input! Please enter numbers.")
-        return None, None
+def calculate_expression(expression):
+    operators = {'+': add, '-': subtract, '*': multiply, '/': divide}
+    tokens = []
+    num = ''
 
-# Function to perform the operation based on the user's choice
-def perform_operation(choice, num1, num2):
-    if choice == '+':
-        print(f"{num1} + {num2} = {add(num1, num2)}")
-    elif choice == '-':
-        print(f"{num1} - {num2} = {subtract(num1, num2)}")
-    elif choice == '*':
-        print(f"{num1} * {num2} = {multiply(num1, num2)}")
-    elif choice == '/':
-        print(f"{num1} / {num2} = {divide(num1, num2)}")
-    elif choice == '%':
-        print(f"{num1} * {num2}/100 = {percentage(num1, num2)}")
-    elif choice == '^':
-        print(f"{num1} ** {num2} = {power(num1, num2)}")
+    for char in expression:
+        if char.isdigit() or char == '.':
+            num += char
+        elif char in operators:
+            if num:
+                tokens.append(float(num))
+                num = ''
+            tokens.append(char)
+    if num:
+        tokens.append(float(num))
 
-# Main function to run the calculator
-def main():
+    # Perform operations in order of precedence
+    for op in ('*', '/', '+', '-'):
+        while op in tokens:
+            idx = tokens.index(op)
+            left = tokens[idx - 1]
+            right = tokens[idx + 1]
+            result = operators[op](left, right)
+            tokens[idx - 1:idx + 2] = [result]
+
+    return tokens[0]
+
+def simple_calculator():
+    
+  
     while True:
-        choice = get_user_choice()
-        if choice == "Q":
-            print("Exiting the program. Goodbye!")
+        print("1. Basic Calculator\n2. Evaluate Expression\n3. Exit")
+        choice = input("Select an option: ")
+
+        if choice == '1':
+            operator = input("Choose an operation (+, -, *, /, %, ^): ")
+            if operator not in ['+', '-', '*', '/', '%', '^']:
+                print("Invalid operator.")
+                continue
+            try:
+                num1 = float(input("Enter the first number: "))
+                num2 = float(input("Enter the second number: "))
+            except ValueError:
+                print("Error: Invalid input.")
+                continue
+
+            if operator == '+':
+                print(f"Result: {add(num1, num2)}")
+            elif operator == '-':
+                print(f"Result: {subtract(num1, num2)}")
+            elif operator == '*':
+                print(f"Result: {multiply(num1, num2)}")
+            elif operator == '/':
+                print(f"Result: {divide(num1, num2)}")
+            elif operator == '%':
+                print(f"Result: {percentage(num1, num2)}")
+            elif operator == '^':
+                print(f"Result: {power(num1, num2)}")
+
+        elif choice == '2':
+            expression = input("Enter an expression ( +, -, *, /): ")
+            try:
+                result = calculate_expression(expression)
+                print(f"Result: {result}")
+            except Exception as e:
+                print(f"Error processing expression: {e}")
+
+        elif choice == '3':
+            print("Exiting the program.")
             break
-        elif choice in ["+", "-", "*", "/", "%", "^"]:
-            num1, num2 = get_numbers()
-            if num1 is not None and num2 is not None:
-                perform_operation(choice, num1, num2)
+
         else:
-            print("Error! Invalid choice. Please try again.")
+            print("Invalid choice. Please try again.")
 
-# Entry point of the program
 if __name__ == "__main__":
-    main()
-
-
-    
-
-    
+    simple_calculator()
