@@ -1,4 +1,4 @@
-#Calculation functions
+# Calculation functions
 def add(a, b):
     return a + b
 
@@ -10,7 +10,7 @@ def multiply(a, b):
 
 def divide(a, b):
     if b == 0:
-        return "Error. Division by 0 is not allowed."
+        return "Error: Division by 0 is not allowed."
     return a / b
 
 def percentage(a, b):
@@ -19,12 +19,11 @@ def percentage(a, b):
 def power(a, b):
     return a ** b
 
-
 def calculate_expression(expression):
     operators = {'+': add, '-': subtract, '*': multiply, '/': divide}
     tokens = []
     num = ''
-
+   
     for char in expression:
         if char.isdigit() or char == '.':
             num += char
@@ -36,22 +35,41 @@ def calculate_expression(expression):
     if num:
         tokens.append(float(num))
 
-    # Perform operations in order of precedence
-    for op in ('*', '/', '+', '-'):
-        while op in tokens:
-            idx = tokens.index(op)
-            left = tokens[idx - 1]
-            right = tokens[idx + 1]
-            result = operators[op](left, right)
-            tokens[idx - 1:idx + 2] = [result]
-
+    
+    for operators_group in (('*', '/'), ('+', '-')):
+        i = 0
+        while i < len(tokens):
+            if tokens[i] in operators_group:
+                op = tokens[i]
+                left = tokens[i - 1]
+                right = tokens[i + 1]
+                result = operators[op](left, right)
+                tokens[i - 1:i + 2] = [result] 
+                i -= 1  
+            else:
+                i += 1   
     return tokens[0]
 
+
+def display_history(history):
+    if not history:
+        print("History is empty.")
+    else:
+        print("History of operations:")
+        for entry in history:
+            print(entry)
+
+
+def clear_history(history):
+    history.clear()
+    print("History has been cleared.")
+
+
 def simple_calculator():
-    
-  
+    history = []  
+
     while True:
-        print("1. Basic Calculator\n2. Evaluate Expression\n3. Exit")
+        print("\n1. Basic Calculator\n2. Evaluate Expression\n3. View History\n4. Clear History\n5. Exit")
         choice = input("Select an option: ")
 
         if choice == '1':
@@ -67,27 +85,37 @@ def simple_calculator():
                 continue
 
             if operator == '+':
-                print(f"Result: {add(num1, num2)}")
+                result = add(num1, num2)
             elif operator == '-':
-                print(f"Result: {subtract(num1, num2)}")
+                result = subtract(num1, num2)
             elif operator == '*':
-                print(f"Result: {multiply(num1, num2)}")
+                result = multiply(num1, num2)
             elif operator == '/':
-                print(f"Result: {divide(num1, num2)}")
+                result = divide(num1, num2)
             elif operator == '%':
-                print(f"Result: {percentage(num1, num2)}")
+                result = percentage(num1, num2)
             elif operator == '^':
-                print(f"Result: {power(num1, num2)}")
+                result = power(num1, num2)
+
+            print(f"Result: {result}")
+            history.append(f"{num1} {operator} {num2} = {result}")
 
         elif choice == '2':
-            expression = input("Enter an expression ( +, -, *, /): ")
+            expression = input("Enter an expression (+, -, *, /): ")
             try:
                 result = calculate_expression(expression)
                 print(f"Result: {result}")
+                history.append(f"{expression} = {result}")
             except Exception as e:
                 print(f"Error processing expression: {e}")
 
         elif choice == '3':
+            display_history(history)
+
+        elif choice == '4':
+            clear_history(history)
+
+        elif choice == '5':
             print("Exiting the program.")
             break
 
