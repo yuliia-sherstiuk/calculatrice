@@ -19,6 +19,8 @@ def percentage(a, b):
 def power(a, b):
     return a ** b
 
+
+# Function to evaluate a mathematical expression
 def calculate_expression(expression):
     operators = {'+': add, '-': subtract, '*': multiply, '/': divide}
     tokens = []
@@ -35,7 +37,6 @@ def calculate_expression(expression):
     if num:
         tokens.append(float(num))
 
-    
     for operators_group in (('*', '/'), ('+', '-')):
         i = 0
         while i < len(tokens):
@@ -51,6 +52,7 @@ def calculate_expression(expression):
     return tokens[0]
 
 
+# Function to display the operation history
 def display_history(history):
     if not history:
         print("History is empty.")
@@ -60,11 +62,14 @@ def display_history(history):
             print(entry)
 
 
+# Function to clear the operation history
 def clear_history(history):
     history.clear()
     print("History has been cleared.")
 
 
+
+# Main calculator function
 def simple_calculator():
     history = []  
 
@@ -121,6 +126,6 @@ def simple_calculator():
 
         else:
             print("Invalid choice. Please try again.")
-
+# Program entry point
 if __name__ == "__main__":
     simple_calculator()
