@@ -19,13 +19,12 @@ def percentage(a, b):
 def power(a, b):
     return a ** b
 
-
 # Function to evaluate a mathematical expression
 def calculate_expression(expression):
     operators = {'+': add, '-': subtract, '*': multiply, '/': divide}
     tokens = []
     num = ''
-   
+
     for char in expression:
         if char.isdigit() or char == '.':
             num += char
@@ -51,7 +50,6 @@ def calculate_expression(expression):
                 i += 1   
     return tokens[0]
 
-
 # Function to display the operation history
 def display_history(history):
     if not history:
@@ -61,13 +59,10 @@ def display_history(history):
         for entry in history:
             print(entry)
 
-
 # Function to clear the operation history
 def clear_history(history):
     history.clear()
     print("History has been cleared.")
-
-
 
 # Main calculator function
 def simple_calculator():
@@ -106,13 +101,18 @@ def simple_calculator():
             history.append(f"{num1} {operator} {num2} = {result}")
 
         elif choice == '2':
-            expression = input("Enter an expression (+, -, *, /): ")
-            try:
-                result = calculate_expression(expression)
-                print(f"Result: {result}")
-                history.append(f"{expression} = {result}")
-            except Exception as e:
-                print(f"Error processing expression: {e}")
+            while True:
+                expression = input("Enter an expression (+, -, *, /): ")
+                if expression[0] in ['*', '/']:
+                    print("Incorrect input. Try again.")
+                    continue
+                try:
+                    result = calculate_expression(expression)
+                    print(f"Result: {result}")
+                    history.append(f"{expression} = {result}")
+                    break
+                except Exception as e:
+                    print(f"Error processing expression: {e}. Try again.")
 
         elif choice == '3':
             display_history(history)
@@ -123,9 +123,8 @@ def simple_calculator():
         elif choice == '5':
             print("Exiting the program.")
             break
-
         else:
             print("Invalid choice. Please try again.")
-# Program entry point
+
 if __name__ == "__main__":
     simple_calculator()
